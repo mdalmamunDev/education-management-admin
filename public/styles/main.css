@@ -1,0 +1,219 @@
+body {
+    font-family: "Outfit";
+    background: linear-gradient(to bottom, #212121, #000000);
+    margin: 0;
+    /* optional: remove default margin */
+    min-height: 100vh;
+    color: white;
+}
+
+.app-font {
+    font-family: "Poppins", sans-serif;
+    /* Always add a fallback */
+    font-weight: 500;
+    /* Medium weight */
+}
+
+.bg-1 {
+    background: #3C3C3C;
+}
+
+.bg-2 {
+    background: #000000;
+}
+
+.bg-3 {
+    background: #6B6B6B;
+}
+
+.bg-4 {
+    background: #7FA4DC;
+}
+
+.bg-5 {
+    background: #436496;
+}
+
+.bg-g {
+    background: linear-gradient(to bottom, #515151, #222222);
+}
+
+.bg-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    /* Optional: add a subtle border */
+    /* border: 1px solid rgba(18, 18, 18, 0.349); */
+}
+
+.text-light {
+    color: #A8A8A8;
+}
+
+.ts1 {
+    color: #26A69A;
+}
+
+
+.btn-g {
+    background: linear-gradient(to bottom, #0175F2, #0A427D);
+}
+
+.btn-g:hover {
+    filter: brightness(1.1);
+}
+
+
+.my-label {
+    display: block;
+    /* block */
+    font-size: 1rem;
+    /* text-sm (14px) */
+    line-height: 1.25rem;
+    /* text-sm line-height */
+    font-weight: 500;
+    /* font-medium */
+    margin-bottom: 0.5rem;
+    /* mb-2 (8px) */
+}
+
+.my-input {
+    width: 100%;
+    padding: 0.90rem 1rem;
+    background-color: #4D4D4D;
+    border: 1px solid #374151;
+    border-radius: 0.8rem;
+    outline: none;
+    transition: box-shadow .2s, border-color .2s;
+}
+
+/* placeholder-gray-500 */
+.my-input::placeholder {
+    color: #646464;
+    opacity: 1;
+}
+
+.my-input:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.my-td {
+    padding: 1rem 0.7rem;
+}
+.my-td-1st {
+    padding: 1rem 0.7rem;
+    text-align: start;
+    padding-left: 2rem;
+}
+.my-td-last {
+    padding: 1rem 0.7rem;
+    text-align: end;
+    padding-right: 2rem;
+}
+
+.table-action {
+  width: 2rem;                  /* w-8 */
+  height: 2rem;                 /* h-8 */
+  background-color: #F9F9F9;    /* bg-[#F9F9F9] */
+  border-radius: 9999px;        /* rounded-full */
+  display: flex;                /* flex */
+  align-items: center;          /* items-center */
+  justify-content: center;      /* justify-center */
+  transition: background-color 0.3s; /* transition-colors */
+}
+
+.table-action:hover {
+  background-color: #E5E7EB;    /* hover:bg-gray-200 */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Edge */
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+
+.no-tailwind {
+  all: revert;
+}
+/* Then rebuild basic typography */
+.no-tailwind {
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+/* Typography */
+.no-tailwind h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 20px 0 12px;
+}
+
+.no-tailwind h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 18px 0 10px;
+}
+
+.no-tailwind h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin: 16px 0 8px;
+}
+
+.no-tailwind h4 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 14px 0 6px;
+}
+
+.no-tailwind h5 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 12px 0 4px;
+}
+
+.no-tailwind p {
+  margin-bottom: 14px;
+}
+
+/* Lists */
+.no-tailwind ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.no-tailwind ol {
+  list-style: decimal;
+  padding-left: 20px;
+}
+
+/* Links */
+.no-tailwind a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* Images */
+.no-tailwind img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tables */
+.no-tailwind table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.no-tailwind th,
+.no-tailwind td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
