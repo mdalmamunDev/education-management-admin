@@ -10,12 +10,20 @@ import httpMixin from "./mixins/httpMixin";
 import store from "./store";
 import ActionButton from "./components/ActionButton.vue";
 import BackButton from "./components/BackButton.vue";
+import ThemeToggle from "./components/ThemeToggle.vue";
 
 const app = createApp(App);
 
 app.use(router);
 app.use(Antd);
 app.use(store);
+
+// Apply the persisted light/dark theme to <html> before the app renders
+// (data-theme drives the CSS variables, `dark` class drives Tailwind dark: utilities)
+const initialTheme = store.state.theme === 'dark' ? 'dark' : 'light';
+document.documentElement.setAttribute('data-theme', initialTheme);
+document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+
 app.mixin(commonMixin);
 app.mixin(httpMixin);
 
@@ -29,5 +37,6 @@ app.use(Toast, {
 
 app.component("ActionButton", ActionButton);
 app.component("BackButton", BackButton);
+app.component("ThemeToggle", ThemeToggle);
 
 app.mount("#app");

@@ -1,34 +1,34 @@
 <template>
   <!-- Stats Cards -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <!-- Coaches Card -->
+    <!-- Students Card -->
     <div class="stat-card rounded-md p-8 text-white">
-      <div class="flex items-center gap-4">
-        <img src="/icons/dashboard/coaches.svg" alt="">
-        <div>
-          <span class="text-3xl">Coaches</span>
-          <div class="text-4xl mt-2">{{ totalCoach }}</div>
-        </div>
-      </div>
-    </div>
-    <!-- Athletes Card -->
-    <div class="stat-card-athletes rounded-md p-8 text-white">
       <div class="flex items-center gap-4">
         <img src="/icons/dashboard/athletes.svg" alt="">
         <div>
-          <span class="text-3xl">Athletes</span>
-          <div class="text-4xl mt-2">{{ totalAthlete }}</div>
+          <span class="text-3xl">Students</span>
+          <div class="text-4xl mt-2">{{ totalStudents }}</div>
+        </div>
+      </div>
+    </div>
+    <!-- Teachers Card -->
+    <div class="stat-card-athletes rounded-md p-8 text-white">
+      <div class="flex items-center gap-4">
+        <img src="/icons/dashboard/coaches.svg" alt="">
+        <div>
+          <span class="text-3xl">Teachers</span>
+          <div class="text-4xl mt-2">{{ totalTeachers }}</div>
         </div>
       </div>
     </div>
 
-    <!-- Total Sessions Card -->
-    <div class="bg-g rounded-md p-8 text-white">
+    <!-- Courses Card -->
+    <div class="bg-accent rounded-md p-8 text-white">
       <div class="flex items-center gap-4">
         <img src="/icons/dashboard/total-sessions.svg" alt="">
         <div>
-          <span class="text-3xl">Total Lessons</span>
-          <div class="text-4xl mt-2">{{ totalLesson }}</div>
+          <span class="text-3xl">Courses</span>
+          <div class="text-4xl mt-2">{{ totalCourses }}</div>
         </div>
       </div>
     </div>
@@ -36,9 +36,9 @@
 
   <!-- Charts and Activity Section -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Weekly Sessions Chart -->
+    <!-- Enrollments Chart -->
     <div class="lg:col-span-2 bg-1 rounded-md p-6">
-      <h3 class="text-xl font-semibold text-white mb-6">Weekly Sessions</h3>
+      <h3 class="text-xl font-semibold text-main mb-6">Enrollments per Course</h3>
       <div class="h-[500px]">
         <Bar :data="chartData" :options="chartOptions" />
       </div>
@@ -48,8 +48,8 @@
     <div class="bg-1 rounded-md p-6 space-y-8">
       <!-- Pie Chart -->
       <div>
-        <h3 class="text-xl font-semibold text-white mb-4">
-          Users Distribution
+        <h3 class="text-xl font-semibold text-main mb-4">
+          People Distribution
         </h3>
         <div class="h-[500px]">
           <Pie :data="pieData" :options="pieOptions" />
@@ -72,10 +72,10 @@
     </div>
   </div>
 
-  <!-- Recent Users Table -->
+  <!-- Recent Students Table -->
   <section class="mt-10 bg-1 rounded-md p-6">
     <div class="bg-1 min-h-[30vh]">
-      <h3 class="text-xl font-semibold text-white mb-6">Recent Users</h3>
+      <h3 class="text-xl font-semibold text-main mb-6">Recent Students</h3>
       <table class="w-full text-center">
         <!-- Table Header -->
         <thead class="bg-2">
@@ -90,11 +90,11 @@
 
         <!-- Table Body -->
         <tbody class="divide-y divide-gray-600">
-          <tr v-for="(item, index) in recentUsers" :key="index">
-            <td class="my-td-1st ps-8">{{ item.name }}</td>
+          <tr v-for="(item, index) in recentStudents" :key="index">
+            <td class="my-td-1st ps-8">{{ item.firstName }} {{ item.lastName }}</td>
             <td class="my-td">{{ item.email }}</td>
-            <td class="my-td"> {{ item.address }}</td>
-            <td class="my-td"> {{ item.ago }}</td>
+            <td class="my-td"> {{ item.department?.departmentName || '—' }}</td>
+            <td class="my-td"> <span v-html="printStatus((item.status || '').toLowerCase())"></span></td>
           </tr>
         </tbody>
       </table>
@@ -131,20 +131,19 @@ export default {
 
   data() {
     return {
-      headers: ['name', 'email', 'address', 'ago'],
-      // Example totals (replace with API values later)
-      totalAthlete: "Loading..",
-      totalCoach: "Loading..",
-      totalParent: "Loading..",
-      recentUsers: [],
-      totalLesson: "Loading..",
+      headers: ['Name', 'Email', 'Department', 'Status'],
+      totalStudents: 0,
+      totalTeachers: 0,
+      totalCourses: 0,
+      totalGuardians: 0,
+      recentStudents: [],
 
       chartData: {
-        labels: ["Loading..", "Loading..", "Loading..", "Loading..", "Loading..", "Loading..", "Loading.."],
+        labels: ["Loading.."],
         datasets: [
           {
-            label: "Weekly Sessions",
-            data: [0, 0, 0, 0, 0, 0, 0],
+            label: "Enrollments",
+            data: [0],
             backgroundColor: (ctx) => {
               const chart = ctx.chart
               const { ctx: canvasCtx, chartArea } = chart
@@ -166,42 +165,42 @@ export default {
         ],
       },
 
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-        },
-        scales: {
-          x: {
-            ticks: { color: "#fff" },
-            grid: { color: "rgba(255,255,255,0.1)" },
-          },
-          y: {
-            beginAtZero: true,
-            ticks: { color: "#fff", stepSize: 2 },
-            grid: { color: "rgba(255,255,255,0.1)" },
-          },
-        },
-      },
     }
   },
 
   mounted() {
-    this.httpReq({
-      method: 'get', callback: ({ totalAthlete, totalParent, totalCoach, recentUsers, lessonsChart, totalLesson }) => {
-        this.totalAthlete = totalAthlete || 0;
-        this.totalParent = totalParent || 0;
-        this.totalCoach = totalCoach || 0;
-        this.recentUsers = recentUsers || [];
-        this.totalLesson = totalLesson || 0;
+    // Reset stale list filters so dashboard requests are clean
+    this.$store.commit('setFilters', {});
 
+    // Students: total count + most recent rows
+    this.fetchData({
+      customUrl: 'students?limit=5',
+      callback: (data, response) => {
+        this.recentStudents = data || [];
+        this.totalStudents = response?.data?.pagination?.totalCount || 0;
+      }
+    });
+    this.fetchData({ customUrl: 'teachers?limit=1', callback: (_, response) => { this.totalTeachers = response?.data?.pagination?.totalCount || 0; } });
+    this.fetchData({ customUrl: 'courses?limit=1', callback: (_, response) => { this.totalCourses = response?.data?.pagination?.totalCount || 0; } });
+    this.fetchData({ customUrl: 'guardians?limit=1', callback: (_, response) => { this.totalGuardians = response?.data?.pagination?.totalCount || 0; } });
+
+    // Enrollments grouped per course (top courses) for the bar chart
+    this.fetchData({
+      customUrl: 'enrollments?limit=200',
+      callback: (data) => {
+        const groups = {};
+        (data || []).forEach((e) => {
+          const key = e.course?.courseName || 'Unknown';
+          groups[key] = (groups[key] || 0) + 1;
+        });
+        // Sort descending and keep top 8 courses
+        const sorted = Object.entries(groups).sort((a, b) => b[1] - a[1]).slice(0, 8);
         this.chartData = {
-          labels: lessonsChart?.labels || [],
+          labels: sorted.map(([name]) => name),
           datasets: [
             {
-              label: "Weekly Sessions",
-              data: lessonsChart?.data || [],
+              label: "Enrollments",
+              data: sorted.map(([, count]) => count),
               backgroundColor: (ctx) => {
                 const chart = ctx.chart
                 const { ctx: canvasCtx, chartArea } = chart
@@ -221,22 +220,21 @@ export default {
               barPercentage: 0.5,
             },
           ],
-        }
-
+        };
       }
-    })
+    });
   },
 
   computed: {
     pieData() {
       return {
-        labels: ["Athletes", "Coaches", "Parents"],
+        labels: ["Students", "Teachers", "Guardians"],
         datasets: [
           {
             data: [
-              this.totalAthlete,
-              this.totalCoach,
-              this.totalParent
+              this.totalStudents,
+              this.totalTeachers,
+              this.totalGuardians
             ],
             backgroundColor: [
               "#0175F2",
@@ -248,16 +246,42 @@ export default {
       }
     },
 
+    /** Bar chart options — tick/grid colors follow the active theme */
+    chartOptions() {
+      const dark = this.$store.getters.theme === 'dark';
+      const tick = dark ? "#e2e8f0" : "#334155";
+      const grid = dark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)";
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+        },
+        scales: {
+          x: {
+            ticks: { color: tick },
+            grid: { color: grid },
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: tick, stepSize: 2 },
+            grid: { color: grid },
+          },
+        },
+      };
+    },
+
     pieOptions() {
+      const dark = this.$store.getters.theme === 'dark';
       return {
         responsive: true,
         plugins: {
           legend: {
             position: "bottom",
-            labels: { color: "#fff" }
+            labels: { color: dark ? "#e2e8f0" : "#334155" }
           }
         }
-      }
+      };
     }
   }
 }

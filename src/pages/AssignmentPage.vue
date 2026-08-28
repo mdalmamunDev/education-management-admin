@@ -1,76 +1,68 @@
-<template>
-  <data-table title="Assign Assignment List" :headers="headers" :show-add-btn="false" :show-action="false"
-    :show-search="false">
+﻿<template>
+  <data-table title="All Assignments" :headers="headers" :def-form-data="defFormData" :modal-w="'3xl'">
     <template #default="{ item }">
-      <td class="my-td-1st ps-8">{{ item.title }}</td>
-      <td class="my-td">{{ getDate(item.date) }}</td>
-      <td class="my-td"> {{ getTime(item.date) }}</td>
-      <td class="my-td">
-        <user-with-email :user="item.athlete" />
-      </td>
-      <td class="my-td">
-        <user-with-email :user="item.coach" />
-      </td>
-      <td class="my-td" v-html="printStatus(item.status)"></td>
+      <td class="my-td-1st font-medium">{{ item.title }}</td>
+      <td class="my-td text-gray-300">{{ item.course?.courseName }}</td>
+      <td class="my-td text-gray-300">{{ item.teacher?.firstName }} {{ item.teacher?.lastName }}</td>
+      <td class="my-td text-gray-300">{{ getDate(item.dueDate) }}</td>
+      <td class="my-td text-gray-300">{{ item.totalPoints }}</td>
     </template>
-    <!-- <template #modal>
-      <div class="p-1 mb-3 grid grid-cols-2">
-        <div>
-          <label class="my-label">Coach</label>
-          <AssignUser :user="formData.coach" label="Add Coach" fetch-url="user/all?role=coach&limit=20"
-            @change="(u) => { formData.coachId = u.id, formData.coach = u }" drop-down-bg="bg-1"
-            style="justify-content: start;" />
+
+    <template #modal>
+      <div class="p-1 mb-3">
+        <label class="my-label">Title</label>
+        <input v-model="formData.title" type="text" required class="my-input" placeholder="Assignment title">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-1 mb-3">
+          <label class="my-label">Course</label>
+          <select v-model="formData.courseId" required class="my-input py-4">
+            <option disabled value="">Select course</option>
+            <option v-for="c in courses" :key="c.id" :value="c.id">{{ c.courseName }}</option>
+          </select>
         </div>
-        <div>
-          <label class="my-label">Athlete</label>
-          <AssignUser :user="formData.athlete" label="Add Athlete" fetch-url="user/all?role=athlete&limit=20"
-            @change="(u) => { formData.athleteId = u.id, formData.athlete = u }" drop-down-bg="bg-1"
-            style="justify-content: start;" />
+        <div class="p-1 mb-3">
+          <label class="my-label">Teacher</label>
+          <select v-model="formData.teacherId" required class="my-input py-4">
+            <option disabled value="">Select teacher</option>
+            <option v-for="t in teachers" :key="t.id" :value="t.id">{{ t.firstName }} {{ t.lastName }}</option>
+          </select>
         </div>
       </div>
       <div class="p-1 mb-3">
-        <label for="gender" class="my-label">Assign a task</label>
-        <select id="gender" v-model="formData.taskId" required class="my-input py-4">
-          <option disabled value="">Select task</option>
-          <option v-for="(item, index) in taskList" :key="index" :value="item.id">
-            {{ item.name }}
-          </option>
-        </select>
+        <label class="my-label">Description</label>
+        <textarea v-model="formData.description" class="my-input" rows="2" placeholder="Description"></textarea>
       </div>
-      <div class="p-1 mb-3">
-        <label class="my-label">Name</label>
-        <input v-model="formData.name" type="text" class="my-input" placeholder="Enter name">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-1 mb-3">
+          <label class="my-label">Due Date</label>
+          <input v-model="formData.dueDate" type="date" required class="my-input">
+        </div>
+        <div class="p-1 mb-3">
+          <label class="my-label">Total Points</label>
+          <input v-model.number="formData.totalPoints" type="number" min="1" required class="my-input">
+        </div>
       </div>
-    </template> -->
+    </template>
   </data-table>
 </template>
 
 <script>
 import DataTable from '@/components/DataTable.vue';
-import UserWithEmail from '@/components/UserWithEmail.vue';
 
 export default {
   name: "AssignmentPage",
-  components: { DataTable, UserWithEmail },
+  components: { DataTable },
   data() {
     return {
-      headers: ["Title", "Date", "Time", "Athlete", "Coach", "Status"],
+      headers: ["Title", "Course", "Teacher", "Due Date", "Total Points"],
+      courses: [], teachers: [],
+      defFormData: { title: "", courseId: "", teacherId: "", description: "", dueDate: "", totalPoints: null },
     };
   },
   mounted() {
-    // this.$store.commit('setFormData', {
-    //   taskId: '',
-    //   athleteId: '',
-    //   coachId: '',
-    // })
-
-    // this.httpReq({
-    //   customUrl: 'task/all',
-    //   method: 'get',
-    //   callback: (data) => {
-    //     this.taskList = data;
-    //   }
-    // })
+    this.httpReq({ customUrl: 'courses?limit=200', method: 'get', callback: (data) => { this.courses = data || []; } });
+    this.httpReq({ customUrl: 'teachers?limit=200', method: 'get', callback: (data) => { this.teachers = data || []; } });
   },
 };
 </script>

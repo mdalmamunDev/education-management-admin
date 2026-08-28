@@ -1,12 +1,17 @@
 <template>
-  <div class="min-h-screen flex p-3">
+  <div class="min-h-screen flex p-3 relative">
+    <!-- Theme toggle (top-right, available before login) -->
+    <div class="absolute top-5 end-6 z-10">
+      <theme-toggle />
+    </div>
+
     <div class="flex w-full h-fit my-auto gap-4 max-w-7xl mx-auto px-8">
       <!-- Left side - Logo -->
       <div class="flex-1 flex items-center justify-center my-20">
-        <img class="w-full max-w-[350px]" :src="`/icons${$route.path}.svg`" alt="">
+        <img class="w-full max-w-[350px] auth-illustration" :src="`/icons${$route.path}.svg`" alt="">
       </div>
 
-      <div class="w-[1px] bg-[#F6F6F6]"></div>
+      <div class="w-[1px] theme-divider"></div>
 
       <!-- Right side - Login Form -->
       <div class="flex-1 flex items-center justify-center">

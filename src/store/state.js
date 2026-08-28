@@ -9,4 +9,6 @@ export const state = {
     filters: {},
     isModalOpen: false,
     isLoading: false,
+    // 'light' | 'dark' — persisted in localStorage, applied on <html data-theme>
+    theme: (typeof localStorage !== 'undefined' && localStorage.getItem('app-theme')) || 'light',
 };

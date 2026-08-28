@@ -30,5 +30,15 @@ export const mutations = {
     },
     setIsLoading(state, data) {
         state.isLoading = data;
+    },
+    setTheme(state, theme) {
+        const t = theme === 'light' ? 'light' : 'dark';
+        state.theme = t;
+        if (typeof document !== 'undefined') {
+            document.documentElement.setAttribute('data-theme', t);
+            // keep Tailwind's class-based dark mode in sync with the CSS variables
+            document.documentElement.classList.toggle('dark', t === 'dark');
+        }
+        try { localStorage.setItem('app-theme', t); } catch (e) { /* ignore */ }
     }
 };

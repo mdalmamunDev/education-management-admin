@@ -11,9 +11,9 @@
 					<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 						<i class="fa-solid fa-magnifying-glass text-2xl text-blue-600"></i>
 					</div>
-					<input v-model="filters.keyword" type="text"
+					<input v-model="filters.search" type="text"
 						:placeholder="searchPlaceholder || `Search ${record?.toLowerCase()} here`"
-						class="bg-white text-gray-900 pl-12 pr-4 py-2 rounded-xl  border border-blue-500 w-80 focus:outline-none focus:ring-2 focus:ring-blue-500">
+						class="bg-surface text-main border-theme border pl-12 pr-4 py-2 rounded-xl w-80 focus:outline-none focus:ring-2 focus:ring-blue-500">
 				</div>
 			</form>
 		</div>
@@ -49,11 +49,11 @@
 							<button v-if="actionEdit" @click="openModal({ ...defFormData, ...item })" class="table-action">
 								<i class="fa fa-edit text-blue-600"></i>
 							</button>
-							<button v-if="actionDelete" @click="deleteRecord(item?._id)" class="table-action">
+							<button v-if="actionDelete" @click="deleteRecord(item?.id)" class="table-action">
 								<i class="fa-solid fa-trash-can text-red-600"></i>
 							</button>
 							<button v-if="actionInfo"
-								@click="typeof onActionInfo === 'function' ? onActionInfo(item) : $router.push(`${$route.path}/${item._id}`)"
+								@click="typeof onActionInfo === 'function' ? onActionInfo(item) : $router.push(`${$route.path}/${item.id}`)"
 								class="table-action">
 								<img class="w-5" src="/icons/info.svg" alt="">
 							</button>
@@ -77,12 +77,12 @@
 	<div v-if="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
 		<div class="relative bg-2 rounded-3xl shadow-lg w-full p-6" :class="`max-w-${modalW}`">
 			<div class="mb-4">
-				<h3 class="font-semibold text-lg text-center">{{ formData._id ? 'Update' : 'Add' }} {{ record }}</h3>
+				<h3 class="font-semibold text-lg text-center">{{ formData.id ? 'Update' : 'Add' }} {{ record }}</h3>
 				<button class="text-3xl hover:text-gray-300 absolute top-2 right-4" @click="closeModal()">
 					&times;
 				</button>
 			</div>
-			<form @submit.prevent="submitForm()" class="overflow-y-auto hide-scrollbar max-h-[80vh]">
+			<form @submit.prevent="handleFormSubmit()" class="overflow-y-auto hide-scrollbar max-h-[80vh]">
 				<slot name="modal">
 
 				</slot>
@@ -147,6 +147,12 @@ export default {
 			type: String,
 			default: "lg"
 		},
+		// Optional function applied to formData before submit (e.g. converting
+		// "HH:MM" time inputs to ISO strings expected by the backend)
+		transformSubmit: {
+			type: Function,
+			default: null,
+		},
 	},
 	data() {
 		return {
@@ -164,6 +170,14 @@ export default {
 		}
 	},
 	methods: {
+		handleFormSubmit() {
+			// Component-level hook: apply optional payload transform, then delegate
+			// to the global mixin's submitForm()
+			if (typeof this.transformSubmit === 'function') {
+				this.$store.commit('setFormData', this.transformSubmit({ ...this.formData }));
+			}
+			this.submitForm();
+		},
 		deleteRecord(id) {
 			this.openAlert({
 				title: `Delete ${this.record}`,
@@ -194,22 +208,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.ant-pagination-item a {
-	/* color: white !important; */
-	background: white !important;
-}
-
-.ant-pagination-item-active a {
-	color: white !important;
-	background: linear-gradient(to bottom, #0175F2, #0A427D) !important;
-
-}
-
-.ant-pagination-options-quick-jumper,
-.ant-pagination-item-link,
-.ant-pagination-item-ellipsis {
-	color: white !important;
-}
-</style>

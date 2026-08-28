@@ -4,7 +4,7 @@
     <p class="text-gray-300 text-xl">Please enter your email and password to continue.</p>
   </div>
 
-  <form @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleLogin">
     <!-- Email Field -->
     <div class="mb-5">
       <label for="email" class="my-label">Email</label>
@@ -17,12 +17,9 @@
     <div class="flex items-center justify-between">
       <label class="flex items-center">
         <input type="checkbox" checked
-          class="w-4 h-4 text-teal-500 bg-gray-800 border-gray-600 rounded focus:ring-teal-500 focus:ring-2">
-        <span class="ml-2 text-sm text-teal-600">Remember password</span>
+          class="w-4 h-4 accent-blue-600 bg-surface-2 border-theme rounded focus:ring-blue-500 focus:ring-2">
+        <span class="ml-2 text-sm text-accent">Remember password</span>
       </label>
-      <router-link to="forgot-password" class="text-sm text-teal-600 hover:text-teal-500 underline">
-        Forgot password?
-      </router-link>
     </div>
 
     <!-- Sign In Button -->
@@ -39,15 +36,20 @@ export default {
   name: "LoginPage",
   components: { PasswordComp, ActionButton },
   mounted() {
-    this.$store.commit('setFormData', {email: '', password: ''})
+    this.$store.commit('setFormData', { email: '', password: '' });
   },
   methods: {
-    handleSubmit() {
+    handleLogin() {
       this.httpReq({
-        callback: ({ tokens }) => {
-          if (!tokens?.accessToken) return;
-          localStorage.setItem('token', tokens?.accessToken);
+        customUrl: 'auth/login',
+        callback: (data) => {
+          if (!data?.token) return;
+          localStorage.setItem('token', data.token);
+          this.$store.commit('setAuth', data.user);
           this.$router.replace('/');
+        },
+        errorCallback: () => {
+          // credentials rejected by backend — stay on the page
         }
       });
     },

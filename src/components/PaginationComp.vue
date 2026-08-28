@@ -38,21 +38,4 @@ export default {
 };
 </script>
 
-<style>
-.ant-pagination-item a {
-  /* color: white !important; */
-  background: white !important;
-}
-
-.ant-pagination-item-active a {
-  color: white !important;
-  background: linear-gradient(to bottom, #0175F2, #0A427D) !important;
-
-}
-
-.ant-pagination-options-quick-jumper,
-.ant-pagination-item-link,
-.ant-pagination-item-ellipsis {
-  color: white !important;
-}
-</style>
+<!-- Pagination styling lives in public/styles/main.css (theme-aware tokens) -->

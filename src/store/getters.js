@@ -28,5 +28,8 @@ export const getters = {
     },
     isLoading(state) {
         return state.isLoading;
+    },
+    theme(state) {
+        return state.theme;
     }
 };

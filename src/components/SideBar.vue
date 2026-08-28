@@ -1,29 +1,26 @@
-<template>
+﻿<template>
   <div class="w-[260px] max-h-full overflow-auto hide-scrollbar bg-g rounded-md flex flex-col">
     <!-- Logo -->
-    <div class="p-10 border-b border-[#BDBDBD]">
+    <div class="p-10 border-b border-theme">
       <img src="/logo.svg" alt="">
     </div>
-
 
     <!-- Navigation -->
     <nav class="px-4 py-6 pt-10 space-y-2">
       <template v-for="(item, index) in sidebarItems" :key="index">
         <!-- If item has children -->
         <div v-if="item.children" class="space-y-1">
-          <!-- Parent Item -->
           <div class="sidebar-item rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer"
             @click="toggleMenu(index)">
             <div class="flex items-center space-x-3">
               <img :src="`/icons/side-bar/${item.icon}.svg`" alt="">
-              <span class="text-white">{{ item.label }}</span>
+              <span class="text-main">{{ item.label }}</span>
             </div>
             <span class="text-gray-400 text-xs">
               <i :class="openIndex === index ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
             </span>
           </div>
 
-          <!-- Children Items -->
           <div v-show="openIndex === index" class="pl-10 space-y-2 transition-all duration-200">
             <router-link v-for="(child, cIndex) in item.children" :key="cIndex" :to="child.path"
               class="sidebar-item rounded-lg px-3 py-2 flex items-center space-x-3 cursor-pointer text-sm"
@@ -39,16 +36,17 @@
           class="sidebar-item rounded-lg px-4 py-3 flex items-center space-x-3 cursor-pointer"
           :class="$route.path.includes(item.path) ? 'btn-g' : ''">
           <img :src="`/icons/side-bar/${item.icon}.svg`" alt="">
-          <span class="text-white">{{ item.label }}</span>
+          <span class="text-main">{{ item.label }}</span>
         </router-link>
       </template>
     </nav>
+
     <!-- Logout -->
     <div class="p-4 mt-10">
       <div @click="showAlert"
-        class="bg-gray-900 rounded-lg px-4 py-3 flex items-center space-x-3 cursor-pointer hover:bg-gray-700 transition-colors">
+        class="bg-2 rounded-lg px-4 py-3 flex items-center space-x-3 cursor-pointer logout-item transition-colors">
         <img src="/icons/side-bar/log-out.svg" />
-        <span class="text-red-300">Log Out</span>
+        <span class="text-red-500">Log Out</span>
       </div>
     </div>
   </div>
@@ -61,45 +59,53 @@ export default {
   name: 'SideBar',
   data() {
     return {
-      openIndex: null, // Track which menu is open
+      openIndex: null,
       sidebarItems: [
         { label: "Dashboard", path: "/dashboard", icon: "dashboard" },
-        { label: "Athlete", path: "/athlete", icon: "athlete" },
-        { label: "Coach", path: "/coach", icon: "coach" },
-        { label: "Parent", path: "/parent", icon: "coach" },
-        { label: "Skill List", path: "/skill", icon: "assignment-list" },
-        { label: "Assignment List", path: "/assignment", icon: "assignment-list" },
-        { label: "Private Lesson", path: "/lesson", icon: "session-management" },
         {
-          label: "Sports", icon: "league", children: [
-            { label: "Sport List", path: "/sport", icon: "league" },
-            { label: "Manage Teams", path: "/sport/team", icon: "manage-teams" },
-            { label: "League List", path: "/sport/league", icon: "league" },
-            { label: "League Reg", path: "/sport/league-registration", icon: "league" },
-            { label: "Matches", path: "/sport/matches", icon: "schedules" },
-            // { label: "Scores & Details", path: "/sport/scores-details", icon: "scores" },
-            // { label: "Statistics", path: "/sport/statistics", icon: "statistics" },
-            // { label: "Standings", path: "/sport/standings", icon: "standings" },
-            // { label: "Permissions & Chats", path: "/sport/permissions-chats", icon: "permissions" },
-            // { label: "Announcements", path: "/sport/announcements", icon: "announcements" },
-            // { label: "Reports & Exporting", path: "/sport/reports-exporting", icon: "reports" },
+          label: "Academics", icon: "session-management", children: [
+            { label: "Departments", path: "/departments", icon: "coach" },
+            { label: "Semesters", path: "/semesters", icon: "statistics" },
           ]
         },
         {
-          label: "After School P.", icon: "after-school-program", children: [
-            { label: "School", path: "/after-school-program/schools", icon: "after-school-program" },
-            { label: "Student", path: "/after-school-program/student", icon: "after-school-program" },
-            { label: "Routes", path: "/after-school-program/routes", icon: "after-school-program" },
-            { label: "Assign School", path: "/after-school-program/route-school", icon: "after-school-program" },
+          label: "People", icon: "coach", children: [
+            { label: "Teachers", path: "/teachers", icon: "coach" },
+            { label: "Students", path: "/students", icon: "athlete" },
+            { label: "Guardians", path: "/guardians", icon: "scores" },
+            { label: "Student Guardians", path: "/student-guardians", icon: "after-school-program" },
+          ]
+        },
+        {
+          label: "Academic", icon: "assignment-list", children: [
+            { label: "Courses", path: "/courses", icon: "league" },
+            { label: "Enrollments", path: "/enrollments", icon: "manage-teams" },
+            { label: "Attendance", path: "/attendances", icon: "scores" },
+            { label: "Grades", path: "/grades", icon: "scores" },
+            { label: "Assignments", path: "/assignments", icon: "assignment-list" },
+            { label: "Submissions", path: "/submissions", icon: "assignment-list" },
+            { label: "Exams", path: "/exams", icon: "statistics" },
+          ]
+        },
+        {
+          label: "Administration", icon: "settings", children: [
+            { label: "Classrooms", path: "/classrooms", icon: "announcements" },
+            { label: "Schedules", path: "/schedules", icon: "schedules" },
+            { label: "Payments", path: "/payments", icon: "reports" },
+            { label: "Office Hours", path: "/office-hours", icon: "session-management" },
+            { label: "Advisement", path: "/advisements", icon: "permissions" },
+          ]
+        },
+        {
+          label: "Library", icon: "reports", children: [
+            { label: "Library Books", path: "/library-books", icon: "reports" },
+            { label: "Book Loans", path: "/book-loans", icon: "manage-teams" },
           ]
         },
         {
           label: "Settings", icon: "settings", children: [
-            { label: "Profile", path: "/profile", icon: "profile" },
-            { label: "Change Password", path: "/change-password", icon: "change-password" },
-            { label: "Privacy Policy", path: "/privacy-policy", icon: "privacy-policy" },
-            { label: "Terms & Conditions", path: "/terms-conditions", icon: "terms-conditions" },
-            { label: "About Us", path: "/about-us", icon: "about-us" },
+            { label: "Profile", path: "/profile", icon: "coach" },
+            { label: "Change Password", path: "/change-password", icon: "session-management" },
           ]
         },
       ],
@@ -137,7 +143,11 @@ export default {
 }
 
 .sidebar-item:hover {
-  background-color: rgba(59, 130, 246, 0.1);
-  border-left: 3px solid #0175F2;
+  background-color: rgba(59, 130, 246, 0.08);
+  border-left: 3px solid var(--accent);
+}
+
+.logout-item:hover {
+  background-color: var(--hover) !important;
 }
 </style>

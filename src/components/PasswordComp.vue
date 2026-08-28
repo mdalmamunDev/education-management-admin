@@ -5,7 +5,7 @@
       <input :type="showPassword ? 'text' : 'password'" class="my-input" :placeholder="placeholder" :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)" />
       <button type="button" @click="togglePassword"
-        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-gray-200">
+        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:opacity-70">
         <i v-if="showPassword" class="fas fa-eye-slash"></i>
         <i v-else class="fas fa-eye"></i>
       </button>

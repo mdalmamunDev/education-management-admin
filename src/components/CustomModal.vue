@@ -3,7 +3,7 @@
     <div class="relative bg-2 rounded-3xl shadow-lg w-full p-6" :class="`max-w-${w}`">
       <div v-if="showHeader" class="flex items-center justify-between mb-2 pb-3 border-b border-gray-400">
         <span class="text-lg">{{ title }}</span>
-        <button class="text-3xl hover:text-gray-300" @click="$emit('close')">
+        <button class="text-3xl hover:opacity-60" @click="$emit('close')">
           &times;
         </button>
       </div>

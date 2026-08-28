@@ -42,6 +42,11 @@ export default {
       return this.$store.getters.isLoading;
     },
 
+    /** True when the dark theme is active (used by the header toggle + charts) */
+    isDark() {
+      return (this.$store.getters.theme || 'light') === 'dark';
+    },
+
     showFooter() {
       return this.$store.getters.showFooter;
     },
@@ -82,6 +87,10 @@ export default {
       this.$store.commit('setIsModalOpen', false);
       this.$store.commit('setFormData', {});
     },
+    /** Switch between the light and dark theme (persisted via the store) */
+    toggleTheme() {
+      this.$store.commit('setTheme', this.isDark ? 'light' : 'dark');
+    },
     openAlert({
       title = 'Are you sure?',
       text = "You won't be able to revert this!",
@@ -93,6 +102,8 @@ export default {
       cancelButtonColor = '#303030',
       callback = false
     } = {}) {
+      // Follow the active light/dark theme
+      const dark = document.documentElement.getAttribute('data-theme') !== 'light';
       Swal.fire({
         title,
         text,
@@ -102,8 +113,8 @@ export default {
         cancelButtonText,
         confirmButtonColor,
         cancelButtonColor,
-        background: '#1e1e1e', // dark background
-        color: '#ffffff',       // white text
+        background: dark ? '#1e293b' : '#ffffff', // theme-aware background
+        color: dark ? '#f1f5f9' : '#111827',      // theme-aware text
         customClass: {
           popup: 'rounded-2xl',
           confirmButton: 'px-10 py-4 rounded-lg',
@@ -189,29 +200,47 @@ export default {
       return new Date(dateTime).toLocaleDateString();
     },
     printStatus(status, colors = {
-      pending: "yellow",
-      upcoming: "yellow",
+      pending: "amber",
+      upcoming: "amber",
+      late: "amber",
+      unpaid: "amber",
       "in-progress": "blue",
+      submitted: "blue",
+      borrowed: "blue",
+      partial: "blue",
+      enrolled: "blue",
       completed: "green",
       active: "green",
+      graded: "green",
+      present: "green",
+      returned: "green",
+      paid: "green",
+      available: "green",
       cancelled: "red",
       inactive: "red",
+      absent: "red",
+      dropped: "red",
+      overdue: "red",
     }
     ) {
       if (!status) return "";
 
-      // convert status to readable format
-      const readable = status
-        .split("-")
+      const key = String(status).toLowerCase();
+
+      // convert status to readable format (supports kebab/SCREAMING_SNAKE)
+      const readable = key
+        .split(/[-_\s]+/)
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
 
-      const color = colors[status] || "gray"; // fallback
+      const color = colors[key] || "gray"; // fallback
 
-      // Build Tailwind classes dynamically
-      const classes = `bg-${color}-900 text-${color}-200 px-3 py-1 rounded-full text-sm font-medium`;
+      // Solid formal chips readable on both light and dark surfaces
+      const classes = color === "amber"
+        ? "bg-amber-500 text-gray-900"
+        : `bg-${color}-600 text-white`;
 
-      return `<span class="${classes}">${readable}</span>`;
+      return `<span class="${classes} px-3 py-1 rounded-full text-xs font-semibold">${readable}</span>`;
     },
     printEnum(enumValue) {
       if (!enumValue) return '';
@@ -220,6 +249,13 @@ export default {
         .split("-")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+    },
+    /** Convert SCREAMING_SNAKE_CASE / kebab-case values (e.g. BANK_TRANSFER) to "Bank Transfer" */
+    humanize(value) {
+      if (!value && value !== 0) return '';
+      return String(value)
+        .replace(/[_-]+/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
     },
     printArea(title, ref = 'printArea') {
       const content = this.$refs[ref].innerHTML;

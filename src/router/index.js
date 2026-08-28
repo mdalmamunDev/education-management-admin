@@ -1,6 +1,6 @@
-// src/router.js
+﻿// src/router.js
 import { createRouter, createWebHistory } from "vue-router";
-import NotFoundPage from "../pages/NotFoundPage.vue"; // <- Create this component
+import NotFoundPage from "../pages/NotFoundPage.vue";
 import AuthLayout from "../components/AuthLayout.vue";
 import AppLayout from "../components/AppLayout.vue";
 import LoginPage from "../pages/auth/LoginPage.vue";
@@ -8,47 +8,38 @@ import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage.vue";
 import VerifyEmailPage from "../pages/auth/VerifyEmailPage.vue";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import DashboardPage from "@/pages/DashboardPage.vue";
-import CoachPage from "@/pages/CoachPage.vue";
-import CoachDetailsPage from "@/pages/CoachDetailsPage.vue";
-import AthletePage from "@/pages/AthletePage.vue";
-import AthleteDetailsPage from "@/pages/AthleteDetailsPage.vue";
+
+// Education Management resources
+import DepartmentPage from "@/pages/DepartmentPage.vue";
+import SemesterPage from "@/pages/SemesterPage.vue";
+import TeacherPage from "@/pages/TeacherPage.vue";
+import StudentPage from "@/pages/StudentPage.vue";
+import GuardianPage from "@/pages/GuardianPage.vue";
+import StudentGuardianPage from "@/pages/StudentGuardianPage.vue";
+import CoursePage from "@/pages/CoursePage.vue";
+import EnrollmentPage from "@/pages/EnrollmentPage.vue";
+import AttendancePage from "@/pages/AttendancePage.vue";
+import GradePage from "@/pages/GradePage.vue";
 import AssignmentPage from "@/pages/AssignmentPage.vue";
-import SessionManagementPage from "@/pages/SessionManagementPage.vue";
-import LeaguePage from "@/pages/sport/LeaguePage.vue";
-import SportPage from "@/pages/sport/SportPage.vue";
-import TeamPage from "@/pages/sport/TeamPage.vue";
-import TaskPage from "@/pages/TaskPage.vue";
-import ParentPage from "@/pages/ParentPage.vue";
-import ParentDetailsPage from "@/pages/ParentDetailsPage.vue";
-import LeagueDetailsPage from "@/pages/sport/LeagueDetailsPage.vue";
-import MatchPage from "@/pages/sport/MatchPage.vue";
-import LeagueRegistrationPage from "@/pages/sport/LeagueRegistrationPage.vue";
-import SchoolPage from "@/pages/after-school-program/SchoolPage.vue";
-import StudentPage from "@/pages/after-school-program/StudentPage.vue";
-import RoutePage from "@/pages/after-school-program/RoutePage.vue";
-import RouteSchoolPage from "@/pages/after-school-program/RouteSchoolPage.vue";
+import SubmissionPage from "@/pages/SubmissionPage.vue";
+import ExamPage from "@/pages/ExamPage.vue";
+import SchedulePage from "@/pages/SchedulePage.vue";
+import ClassroomPage from "@/pages/ClassroomPage.vue";
+import PaymentPage from "@/pages/PaymentPage.vue";
+import OfficeHourPage from "@/pages/OfficeHourPage.vue";
+import AdvisementPage from "@/pages/AdvisementPage.vue";
+import LibraryBookPage from "@/pages/LibraryBookPage.vue";
+import BookLoanPage from "@/pages/BookLoanPage.vue";
+
+// Settings
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import ChangePassPage from "@/pages/settings/ChangePassPage.vue";
-import SettingsPage from "@/pages/SettingsPage.vue";
-import PrivacyPolicyPage from "@/pages/settings/PrivacyPolicyPage.vue";
-import TermsConditionsPage from "@/pages/settings/TermsConditionsPage.vue";
-import AboutUsPage from "@/pages/settings/AboutUsPage.vue";
-// import UserLayout from "@/components/UserLayout.vue";
-// import ReportPage from "../pages/ReportPage.vue";
-// import ClientsAccountsPage from "../pages/ClientsAccountsPage.vue"; // <- Create this component
-// import EquipmentsPage from "../pages/EquipmentsPage.vue"; // <- Create this component
-// import ProfilePage from "@/pages/ProfilePage.vue";
-// import UserLayout from "@/components/UserLayout.vue";
-// import ChangePassPage from "@/pages/ChangePassPage.vue";
-// import EquipmentDetailsPage from "@/pages/EquipmentDetailsPage.vue";
-// import SettingsPage from "@/pages/SettingsPage.vue";
 
 const routes = [
   {
     path: "/auth",
     component: AuthLayout,
     children: [
-      { path: "", redirect: "auth/login" }, // Redirect to /auth/login
       { path: "login", component: LoginPage, meta: { title: "Login", dataUrl: "auth/login" } },
       { path: "forgot-password", component: ForgotPasswordPage, meta: { title: "Forgot Password", dataUrl: "auth/forgot-password" } },
       { path: "verify-email", component: VerifyEmailPage, meta: { title: "Verify Email", dataUrl: "auth/verify-email" } },
@@ -60,52 +51,42 @@ const routes = [
     path: "/",
     component: AppLayout,
     children: [
-      { path: "/", redirect: '/dashboard' },
+      { path: "", redirect: "/dashboard" },
       { path: "/dashboard", component: DashboardPage, meta: { title: "Dashboard", dataUrl: "dashboard" } },
-      { path: "/athlete", component: AthletePage, meta: { title: "Athlete", dataUrl: "user/athlete" } },
-      { path: "/athlete/:id", component: AthleteDetailsPage, meta: { title: "Coach Details", dataUrl: "user/athlete" } },
-      { path: "/coach", component: CoachPage, meta: { title: "Coach", dataUrl: "user/coach" } },
-      { path: "/coach/:id", component: CoachDetailsPage, meta: { title: "Coach Details", dataUrl: "athlete-task" } },
-      { path: "/parent", component: ParentPage, meta: { title: "Parent", dataUrl: "user/parent" } },
-      { path: "/parent/:id", component: ParentDetailsPage, meta: { title: "parent Details", dataUrl: "athlete" } },
-      { path: "/assignment", component: AssignmentPage, meta: { title: "Assignment", dataUrl: "assignment" } },
-      { path: "/lesson", component: SessionManagementPage, meta: { title: "All Sessions", dataUrl: "lesson" } },
-      { path: "/skill", component: TaskPage, meta: { title: "Skill", dataUrl: "skill" } },
-      // { path: "/session-mange/:id", component: SessionManagementDetailsPage, meta: { title: "Session", dataUrl: "session" } },
-      {
-        path: "/sport",
-        children: [
-          { path: '', component: SportPage, meta: { title: "Sport", dataUrl: "sport" } },
-          { path: 'league', component: LeaguePage, meta: { title: "League", dataUrl: "league" } },
-          { path: 'league/:id', component: LeagueDetailsPage, meta: { title: "League Details", dataUrl: "league" } },
-          { path: 'league-registration', component: LeagueRegistrationPage, meta: { title: "League Registration", dataUrl: "league-registration" } },
-          { path: 'team', component: TeamPage, meta: { title: "Team", dataUrl: "team" } },
-          { path: 'matches', component: MatchPage, meta: { title: "Matches", dataUrl: "match" } },
-        ]
-      },
-      {
-        path: "/after-school-program",
-        children: [
-          { path: 'schools', component: SchoolPage, meta: { title: "School", dataUrl: "school" } },
-          { path: 'student', component: StudentPage, meta: { title: "Student", dataUrl: "student" } },
-          { path: 'routes', component: RoutePage, meta: { title: "Route", dataUrl: "route" } },
-          { path: 'route-school', component: RouteSchoolPage, meta: { title: "Route School", dataUrl: "route-school" } },
-        ]
-      },
-      // { path: "/coach/:id", component: CoachDetailsPage, meta: { title: "Coach Details", dataUrl: "coach" } },
-      // { path: "report", component: ReportPage, meta: { title: "Report", dataUrl: "clients/report" } },
-      {
-        path: "/",
-        // component: UserLayout,
-        children: [
-          { path: "profile", component: ProfilePage, meta: { title: "Profile", dataUrl: "user/u/me" } },
-          { path: "change-password", component: ChangePassPage, meta: { title: "Reset Password", dataUrl: "auth/change-password" } },
-          { path: "settings", component: SettingsPage, meta: { title: "Settings", dataUrl: "settings" } },
-          { path: "privacy-policy", component: PrivacyPolicyPage, meta: { title: "Privacy Policy", dataUrl: "setting/privacy-policy" } },
-          { path: "terms-conditions", component: TermsConditionsPage, meta: { title: "Terms & Conditions", dataUrl: "setting/terms-conditions" } },
-          { path: "about-us", component: AboutUsPage, meta: { title: "About Us", dataUrl: "setting/about-us" } },
-        ],
-      },
+
+      // Academics
+      { path: "/departments", component: DepartmentPage, meta: { title: "Department", dataUrl: "departments" } },
+      { path: "/semesters", component: SemesterPage, meta: { title: "Semester", dataUrl: "semesters" } },
+
+      // People
+      { path: "/teachers", component: TeacherPage, meta: { title: "Teacher", dataUrl: "teachers" } },
+      { path: "/students", component: StudentPage, meta: { title: "Student", dataUrl: "students" } },
+      { path: "/guardians", component: GuardianPage, meta: { title: "Guardian", dataUrl: "guardians" } },
+      { path: "/student-guardians", component: StudentGuardianPage, meta: { title: "Student Guardian", dataUrl: "student-guardians" } },
+
+      // Courses & learning
+      { path: "/courses", component: CoursePage, meta: { title: "Course", dataUrl: "courses" } },
+      { path: "/enrollments", component: EnrollmentPage, meta: { title: "Enrollment", dataUrl: "enrollments" } },
+      { path: "/attendances", component: AttendancePage, meta: { title: "Attendance", dataUrl: "attendances" } },
+      { path: "/grades", component: GradePage, meta: { title: "Grade", dataUrl: "grades" } },
+      { path: "/assignments", component: AssignmentPage, meta: { title: "Assignment", dataUrl: "assignments" } },
+      { path: "/submissions", component: SubmissionPage, meta: { title: "Submission", dataUrl: "submissions" } },
+      { path: "/exams", component: ExamPage, meta: { title: "Exam", dataUrl: "exams" } },
+
+      // Administration & finance
+      { path: "/classrooms", component: ClassroomPage, meta: { title: "Classroom", dataUrl: "classrooms" } },
+      { path: "/schedules", component: SchedulePage, meta: { title: "Schedule", dataUrl: "schedules" } },
+      { path: "/payments", component: PaymentPage, meta: { title: "Payment", dataUrl: "payments" } },
+      { path: "/office-hours", component: OfficeHourPage, meta: { title: "Office Hours", dataUrl: "office-hours" } },
+      { path: "/advisements", component: AdvisementPage, meta: { title: "Advisement", dataUrl: "advisements" } },
+
+      // Library
+      { path: "/library-books", component: LibraryBookPage, meta: { title: "Library Book", dataUrl: "library-books" } },
+      { path: "/book-loans", component: BookLoanPage, meta: { title: "Book Loan", dataUrl: "book-loans" } },
+
+      // Settings
+      { path: "profile", component: ProfilePage, meta: { title: "Profile", dataUrl: "auth/me" } },
+      { path: "change-password", component: ChangePassPage, meta: { title: "Change Password", dataUrl: "auth/change-password" } },
     ]
   },
 
@@ -118,21 +99,20 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/auth/login', '/auth/forgot-password', '/auth/verify-email', '/auth/reset-password'];
-  const token = localStorage.getItem('token');
+  const publicPages = ["/auth/login", "/auth/forgot-password", "/auth/verify-email", "/auth/reset-password"];
+  const token = localStorage.getItem("token");
 
   // If user is logged in, don't permit visiting public pages
   if (token && publicPages.includes(to.path)) {
-    return next('/');
+    return next("/");
   }
-  console.log(token);
 
-  const authRequired = !publicPages.includes(to.path) && !to.path.startsWith('/auth');
+  const authRequired = !publicPages.includes(to.path) && !to.path.startsWith("/auth");
 
-  document.title = `Athletics | ${to.meta.title}`;
+  document.title = `EduTech | ${to.meta.title || "Admin"}`;
 
   if (authRequired && !token) {
-    return next('/auth/login');
+    return next("/auth/login");
   }
   next();
 });
