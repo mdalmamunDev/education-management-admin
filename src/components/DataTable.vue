@@ -1,6 +1,6 @@
 <template>
 	<div v-if="showTitle" class="flex">
-		<div class="flex-1 flex justify-between items-center px-8 py-4 bg-g">
+		<div class="flex-1 flex justify-between items-center px-8 py-4 bg-1">
 			<h1 class="text-2xl font-semibold">{{ title }}</h1>
 
 			<!-- Search Bar -->

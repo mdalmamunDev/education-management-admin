@@ -1,8 +1,8 @@
 ﻿<template>
   <div class="w-[260px] max-h-full overflow-auto hide-scrollbar bg-g rounded-md flex flex-col">
     <!-- Logo -->
-    <div class="p-10 border-b border-theme">
-      <img src="/logo.svg" alt="">
+    <div class="px-5 py-10 border-b border-theme">
+      <img src="images/logo.png" alt="">
     </div>
 
     <!-- Navigation -->
@@ -14,19 +14,19 @@
             @click="toggleMenu(index)">
             <div class="flex items-center space-x-3">
               <img :src="`/icons/side-bar/${item.icon}.svg`" alt="">
-              <span class="text-main">{{ item.label }}</span>
+              <span class="">{{ item.label }}</span>
             </div>
             <span class="text-gray-400 text-xs">
               <i :class="openIndex === index ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
             </span>
           </div>
 
-          <div v-show="openIndex === index" class="pl-10 space-y-2 transition-all duration-200">
+          <div v-show="openIndex === index" class="pl-6 space-y-2 transition-all duration-200">
             <router-link v-for="(child, cIndex) in item.children" :key="cIndex" :to="child.path"
               class="sidebar-item rounded-lg px-3 py-2 flex items-center space-x-3 cursor-pointer text-sm"
               :class="$route.path === child.path ? 'btn-g' : ''">
               <img :src="`/icons/side-bar/${child.icon}.svg`" alt="">
-              <span class="text-gray-300">{{ child.label }}</span>
+              <span class="">{{ child.label }}</span>
             </router-link>
           </div>
         </div>
@@ -36,7 +36,7 @@
           class="sidebar-item rounded-lg px-4 py-3 flex items-center space-x-3 cursor-pointer"
           :class="$route.path.includes(item.path) ? 'btn-g' : ''">
           <img :src="`/icons/side-bar/${item.icon}.svg`" alt="">
-          <span class="text-main">{{ item.label }}</span>
+          <span class="">{{ item.label }}</span>
         </router-link>
       </template>
     </nav>
@@ -138,10 +138,6 @@ export default {
 </script>
 
 <style scoped>
-.sidebar-item {
-  transition: all 0.2s ease;
-}
-
 .sidebar-item:hover {
   background-color: rgba(59, 130, 246, 0.08);
   border-left: 3px solid var(--accent);

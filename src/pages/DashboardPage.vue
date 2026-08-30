@@ -2,7 +2,7 @@
   <!-- Stats Cards -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <!-- Students Card -->
-    <div class="stat-card rounded-md p-8 text-white">
+    <div class="stat-card-1 rounded-md p-8 text-white">
       <div class="flex items-center gap-4">
         <img src="/icons/dashboard/athletes.svg" alt="">
         <div>
@@ -12,7 +12,7 @@
       </div>
     </div>
     <!-- Teachers Card -->
-    <div class="stat-card-athletes rounded-md p-8 text-white">
+    <div class="stat-card-2 rounded-md p-8 text-white">
       <div class="flex items-center gap-4">
         <img src="/icons/dashboard/coaches.svg" alt="">
         <div>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Courses Card -->
-    <div class="bg-accent rounded-md p-8 text-white">
+    <div class="stat-card-3 rounded-md p-8 text-white">
       <div class="flex items-center gap-4">
         <img src="/icons/dashboard/total-sessions.svg" alt="">
         <div>
@@ -155,8 +155,8 @@ export default {
                 0,
                 chartArea.bottom
               )
-              gradient.addColorStop(0, "#54A7FF")
-              gradient.addColorStop(1, "#326499")
+              // gradient.addColorStop(0, "#54A7FF")
+              // gradient.addColorStop(1, "#326499")
               return gradient
             },
             borderRadius: 6,
@@ -290,11 +290,15 @@ export default {
 
 
 <style scoped>
-.stat-card {
-  background: linear-gradient(180deg, #0175F2 0%, #0A427D 100%);
+.stat-card-1 {
+  background: linear-gradient(180deg, #faab00 0%, #9c6600 100%);
 }
 
-.stat-card-athletes {
-  background: linear-gradient(180deg, #60a5fa 0%, #0175F2 100%);
+.stat-card-2 {
+  background: linear-gradient(180deg, #2d29fc 0%, #000269 100%);
+}
+
+.stat-card-3 {
+  background: linear-gradient(180deg, #3cff66 0%, #00702b 100%);
 }
 </style>

@@ -3,17 +3,17 @@
    Formal slate + blue palette for an education admin panel
    ============================================================ */
 :root {
-    --bg-page: #f1f5f9;        /* page background */
-    --bg-surface: #ffffff;     /* cards, tables, modals */
+    --bg-page: #e2dfdd;        /* page background */
+    --bg-surface: #f7f3ef;     /* cards, tables, modals */
     --bg-surface-2: #f8fafc;   /* secondary surface */
-    --bg-inset: #eef2f7;       /* table headers, wells */
-    --bg-grad: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+    --bg-inset: #faeedc;       /* table headers, wells */
+    --bg-grad: linear-gradient(180deg, #ffffff 0%, #fae3c2 100%);
     --text-1: #111827;         /* primary text */
     --text-2: #4b5563;         /* secondary/muted text */
     --border: #e5e7eb;
     --border-strong: #d1d5db;
-    --accent: #2563eb;         /* primary blue */
-    --accent-2: #1d4ed8;
+    --accent: #ffc56d;
+    --accent-2: #fca402;
     --accent-soft: rgba(37, 99, 235, 0.08);
     --hover: #f3f4f6;
     --input-bg: #ffffff;
@@ -25,17 +25,17 @@
 }
 
 html[data-theme="dark"] {
-    --bg-page: #0b1220;
-    --bg-surface: #1e293b;
-    --bg-surface-2: #1a2537;
+    --bg-page: #000000;
+    --bg-surface: #181109;
+    --bg-surface-2: #372a1a;
     --bg-inset: #0f172a;
-    --bg-grad: linear-gradient(180deg, #1e293b 0%, #152238 100%);
+    --bg-grad: linear-gradient(180deg, #000a24 0%, #2c1f0e 100%);
     --text-1: #f1f5f9;
     --text-2: #94a3b8;
     --border: #334155;
     --border-strong: #475569;
-    --accent: #3b82f6;
-    --accent-2: #1d4ed8;
+    --accent: #faab00;
+    --accent-2: #9c6600;
     --accent-soft: rgba(59, 130, 246, 0.14);
     --hover: #263449;
     --input-bg: #0f172a;
