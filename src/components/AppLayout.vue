@@ -39,16 +39,20 @@
         <router-view />
       </div>
     </div>
+
+    <!-- Floating AI chat assistant (persists across every authenticated page) -->
+    <AiChatWidget />
   </div>
 
 </template>
 
 <script>
 import SideBar from './SideBar.vue';
+import AiChatWidget from './AiChatWidget.vue';
 
 export default {
   name: "AppLayout",
-  components: { SideBar },
+  components: { SideBar, AiChatWidget },
   mounted() {
     const existAuth = this.$store.getters.auth;
     if (!existAuth?.id) {
