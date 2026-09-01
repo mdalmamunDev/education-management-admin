@@ -16,11 +16,11 @@
     <transition name="ai-panel-pop">
       <div v-if="open" class="ai-panel">
         <!-- Header -->
-        <div class="ai-header">
+        <div class="ai-header" @mousemove="onGlow">
           <span class="ai-header-glow"></span>
           <div class="flex items-center justify-between gap-2 px-4 py-3 relative">
             <div class="flex items-center gap-2.5 min-w-0">
-              <div class="ai-bot-avatar border">
+              <div class="ai-bot-avatar">
                 <i class="fa-solid fa-robot"></i>
                 <span class="ai-bot-pulse"></span>
               </div>
@@ -32,12 +32,12 @@
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button type="button" class="ai-header-btn" @click="clearMessages" title="Clear chat"
-                aria-label="Clear chat">
+              <button type="button" class="ai-header-btn ai-glow" @mousemove.stop="onGlow"
+                @click="clearMessages" title="Clear chat" aria-label="Clear chat">
                 <i class="fa-solid fa-rotate-left"></i>
               </button>
-              <button type="button" class="ai-header-btn" @click="open = false" title="Close chat"
-                aria-label="Close chat">
+              <button type="button" class="ai-header-btn ai-glow" @mousemove.stop="onGlow"
+                @click="open = false" title="Close chat" aria-label="Close chat">
                 <i class="fa-solid fa-xmark"></i>
               </button>
             </div>
@@ -85,8 +85,9 @@
 
         <!-- Quick suggestions -->
         <div v-if="suggestions.length" class="ai-suggestions overflow-x-auto">
-          <button v-for="(suggestion, index) in suggestions" :key="index" type="button" class="ai-suggestion"
-            :disabled="isLoading" @click="sendMessage(suggestion)">
+          <button v-for="(suggestion, index) in suggestions" :key="index" type="button"
+            class="ai-suggestion ai-glow" @mousemove="onGlow" :disabled="isLoading"
+            @click="sendMessage(suggestion)">
             {{ suggestion }}
           </button>
         </div>
@@ -96,9 +97,10 @@
           <textarea v-model="message" rows="1" class="ai-input" placeholder="Ask anything..."
             @keydown.enter.exact.prevent="onEnter" @keydown.shift.enter.exact="onShiftEnter"
             :disabled="isLoading"></textarea>
-          <button type="button" class="ai-send" :class="{ 'is-active': message.trim() && !isLoading }"
-            :disabled="isLoading || !message.trim()" @click="sendMessage()" title="Send message"
-            aria-label="Send message">
+          <button type="button" class="ai-send ai-glow" @mousemove="onGlow"
+            :class="{ 'is-active': message.trim() && !isLoading }"
+            :disabled="isLoading || !message.trim()" @click="sendMessage()"
+            title="Send message" aria-label="Send message">
             <i class="fa-solid fa-paper-plane"></i>
           </button>
         </div>
@@ -133,6 +135,12 @@ export default {
     };
   },
   methods: {
+    onGlow(e) {
+      const el = e.currentTarget;
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+      el.style.setProperty("--my", `${e.clientY - rect.top}px`);
+    },
     toggleOpen() {
       this.open = !this.open;
       if (this.open) {
@@ -256,11 +264,9 @@ export default {
   animation: ai-ring-pulse 2.6s ease-out infinite;
   pointer-events: none;
 }
-
 .ai-launcher-ring--2 {
   animation-delay: 1.3s;
 }
-
 .ai-launcher.is-open .ai-launcher-ring {
   display: none;
 }
@@ -278,41 +284,16 @@ export default {
 }
 
 @keyframes ai-core-breathe {
-
-  0%,
-  100% {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 0 0 0 rgba(0, 0, 0, 0);
-  }
-
-  50% {
-    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.22), 0 0 18px 4px color-mix(in srgb, var(--accent) 45%, transparent);
-  }
+  0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 0 0 0 rgba(0,0,0,0); }
+  50% { box-shadow: 0 10px 34px rgba(0, 0, 0, 0.22), 0 0 18px 4px color-mix(in srgb, var(--accent) 45%, transparent); }
 }
-
 @keyframes ai-ring-pulse {
-  0% {
-    transform: scale(0.9);
-    opacity: 0.55;
-  }
-
-  100% {
-    transform: scale(1.9);
-    opacity: 0;
-  }
+  0% { transform: scale(0.9); opacity: 0.55; }
+  100% { transform: scale(1.9); opacity: 0; }
 }
-
 @keyframes ai-dot-blink {
-
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.4;
-    transform: scale(0.85);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
 }
 
 /* ---------- Panel ---------- */
@@ -338,18 +319,16 @@ export default {
 .ai-panel-pop-enter-active {
   transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
 .ai-panel-pop-leave-active {
   transition: opacity 0.18s ease, transform 0.2s ease;
 }
-
 .ai-panel-pop-enter-from,
 .ai-panel-pop-leave-to {
   opacity: 0;
   transform: translateY(12px) scale(0.92);
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header (cursor-tracked spotlight) ---------- */
 .ai-header {
   position: relative;
   flex-shrink: 0;
@@ -362,32 +341,20 @@ export default {
 .ai-header-glow {
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.18) 35%, transparent 50%);
-  background-size: 220% 100%;
-  animation: ai-sheen 5s linear infinite;
+  z-index: 0;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(255, 255, 255, 0.35), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
   pointer-events: none;
+}
+.ai-header:hover .ai-header-glow {
+  opacity: 1;
 }
 
 @keyframes ai-header-shift {
-
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes ai-sheen {
-  0% {
-    background-position: -60% 0;
-  }
-
-  100% {
-    background-position: 160% 0;
-  }
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .ai-bot-avatar {
@@ -417,7 +384,6 @@ export default {
   align-items: center;
   gap: 0.35rem;
 }
-
 .ai-status-dot {
   width: 0.4rem;
   height: 0.4rem;
@@ -441,10 +407,39 @@ export default {
   justify-content: center;
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
-
 .ai-header-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: scale(1.08);
+}
+
+/* ---------- Cursor-follow glow (generic, buttons/chips) ---------- */
+.ai-glow {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.ai-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(90px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.35), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.ai-glow:hover::before {
+  opacity: 1;
+}
+.ai-glow > * {
+  position: relative;
+  z-index: 1;
+}
+.ai-suggestion.ai-glow::before,
+.ai-send.ai-glow::before {
+  background: radial-gradient(140px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
 }
 
 /* ---------- Messages ---------- */
@@ -459,7 +454,6 @@ export default {
 .ai-msg-enter-active {
   transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 .ai-msg-enter-from {
   opacity: 0;
   transform: translateY(10px) scale(0.97);
@@ -473,7 +467,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 .ai-avatar--thinking {
   animation: ai-core-breathe 1.4s ease-in-out infinite;
 }
@@ -482,7 +475,6 @@ export default {
   background: var(--bg-surface-2);
   color: var(--text-1);
 }
-
 .ai-bubble--user {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #fff;
@@ -492,7 +484,6 @@ export default {
 .ai-typing {
   background: var(--bg-surface-2);
 }
-
 .ai-typing-dot {
   width: 0.5rem;
   height: 0.5rem;
@@ -501,27 +492,12 @@ export default {
   margin-right: 0.25rem;
   animation: ai-bounce 1s ease-in-out infinite;
 }
-
-.ai-typing-dot:nth-child(2) {
-  animation-delay: 0.15s;
-}
-
-.ai-typing-dot:nth-child(3) {
-  animation-delay: 0.3s;
-}
+.ai-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.ai-typing-dot:nth-child(3) { animation-delay: 0.3s; }
 
 @keyframes ai-bounce {
-
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.5;
-  }
-
-  50% {
-    transform: translateY(-4px);
-    opacity: 1;
-  }
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-4px); opacity: 1; }
 }
 
 /* ---------- Suggestions ---------- */
@@ -531,7 +507,6 @@ export default {
   display: flex;
   gap: 0.5rem;
 }
-
 .ai-suggestion {
   flex-shrink: 0;
   border: 1px solid var(--border);
@@ -544,13 +519,11 @@ export default {
   white-space: nowrap;
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
-
 .ai-suggestion:hover:not(:disabled) {
   background: var(--hover);
   border-color: var(--border-strong);
   transform: translateY(-1px);
 }
-
 .ai-suggestion:disabled {
   cursor: not-allowed;
   opacity: 0.6;
@@ -561,7 +534,6 @@ export default {
   flex-shrink: 0;
   border-top: 1px solid var(--border);
 }
-
 .ai-input {
   flex: 1 1 auto;
   resize: none;
@@ -577,7 +549,6 @@ export default {
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 .ai-input:focus {
   border-color: var(--focus);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
@@ -596,17 +567,14 @@ export default {
   justify-content: center;
   transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
-
 .ai-send.is-active {
   background: linear-gradient(180deg, var(--accent), var(--accent-2));
   color: #fff;
 }
-
 .ai-send.is-active:hover {
   filter: brightness(1.08);
   transform: scale(1.06) rotate(-8deg);
 }
-
 .ai-send:disabled {
   cursor: not-allowed;
   opacity: 0.6;
