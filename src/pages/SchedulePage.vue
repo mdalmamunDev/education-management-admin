@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Schedules" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit">
+  <data-table title="All Schedules" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.course?.courseName }}</td>
       <td class="my-td text-gray-300">{{ item.classroom ? `${item.classroom.building} - ${item.classroom.roomNumber}` : 'N/A' }}</td>
@@ -61,6 +61,15 @@ export default {
   data() {
     return {
       headers: ["Course", "Classroom", "Day", "Start Time", "End Time", "Semester"],
+      filterOrderOptions: [
+        { label: "Course", value: "courseId" },
+        { label: "Classroom", value: "classroomId" },
+        { label: "Day", value: "dayOfWeek" },
+        { label: "Start Time", value: "startTime" },
+        { label: "End Time", value: "endTime" },
+        { label: "Semester", value: "semester" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       courses: [],
       classrooms: [],
       days: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"],
@@ -68,6 +77,7 @@ export default {
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'courses?limit=200', method: 'get', callback: (data) => { this.courses = data || []; } });
     this.httpReq({ customUrl: 'classrooms?limit=200', method: 'get', callback: (data) => { this.classrooms = data || []; } });
   },

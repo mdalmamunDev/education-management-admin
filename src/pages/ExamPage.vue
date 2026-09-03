@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Exams" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit">
+  <data-table title="All Exams" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ humanize(item.examType) }}</td>
       <td class="my-td text-gray-300">{{ item.course?.courseName }}</td>
@@ -61,11 +61,21 @@ export default {
   data() {
     return {
       headers: ["Exam Type", "Course", "Exam Date", "Duration", "Location", "Total Marks"],
+      filterOrderOptions: [
+        { label: "Exam Type", value: "examType" },
+        { label: "Course", value: "courseId" },
+        { label: "Exam Date", value: "examDate" },
+        { label: "Duration", value: "duration" },
+        { label: "Location", value: "location" },
+        { label: "Total Marks", value: "totalMarks" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       courses: [],
       defFormData: { courseId: "", examType: "MIDTERM", examDate: "", duration: "", location: "", totalMarks: null },
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'courses?limit=200', method: 'get', callback: (data) => { this.courses = data || []; } });
   },
   methods: {

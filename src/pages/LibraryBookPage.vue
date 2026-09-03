@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Library Books" :headers="headers" :def-form-data="defFormData" :action-info="false">
+  <data-table title="All Library Books" :headers="headers" :def-form-data="defFormData" :action-info="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.title }}</td>
       <td class="my-td text-gray-300">{{ item.author }}</td>
@@ -56,8 +56,19 @@ export default {
   data() {
     return {
       headers: ["Title", "Author", "ISBN", "Category", "Available Copies"],
+      filterOrderOptions: [
+        { label: "Title", value: "title" },
+        { label: "Author", value: "author" },
+        { label: "ISBN", value: "isbn" },
+        { label: "Category", value: "category" },
+        { label: "Available Copies", value: "copiesAvailable" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       defFormData: { isbn: "", title: "", author: "", publisher: "", publicationYear: null, category: "", copiesAvailable: 0 },
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

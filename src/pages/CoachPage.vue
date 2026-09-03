@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Coach’s List" :headers="headers" :def-form-data="{status: 'active', gender: ''}">
+  <data-table title="All Coach’s List" :headers="headers" :def-form-data="{status: 'active', gender: ''}" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st">
         <div class="flex items-center space-x-3">
@@ -82,7 +82,19 @@ export default {
   data() {
     return {
       headers: ["Name", "E-mail", "Total Assignment", "Total Session", "Total Athlete", "Status"],
+      filterOrderOptions: [
+        { label: "Name", value: "name" },
+        { label: "E-mail", value: "email" },
+        { label: "Total Assignment", value: "totalAssignments" },
+        { label: "Total Session", value: "totalSessions" },
+        { label: "Total Athlete", value: "totalAthletes" },
+        { label: "Status", value: "status" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

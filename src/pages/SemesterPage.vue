@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Semesters" :headers="headers" :def-form-data="defFormData" :action-info="false">
+  <data-table title="All Semesters" :headers="headers" :def-form-data="defFormData" :action-info="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.semesterName }}</td>
       <td class="my-td text-gray-300">{{ item.academicYear }}</td>
@@ -37,8 +37,18 @@ export default {
   data() {
     return {
       headers: ["Semester Name", "Academic Year", "Start Date", "End Date"],
+      filterOrderOptions: [
+        { label: "Semester Name", value: "semesterName" },
+        { label: "Academic Year", value: "academicYear" },
+        { label: "Start Date", value: "startDate" },
+        { label: "End Date", value: "endDate" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       defFormData: { semesterName: "", academicYear: "", startDate: "", endDate: "" },
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

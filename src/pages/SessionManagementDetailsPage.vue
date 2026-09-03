@@ -13,7 +13,7 @@
       </div>
     </div>
   </div>
-  <data-table :show-title="false" :headers="headers" :show-add-btn="false" :action-edit="false" @action-info="(item) => {show = true}">
+  <data-table :show-title="false" :headers="headers" :show-add-btn="false" :action-edit="false" @action-info="(item) => {show = true}" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st">Robert Fox</td>
       <td class="my-td text-gray-300">robertfox@gmail.com</td>
@@ -69,8 +69,16 @@ export default {
   data() {
     return {
       headers: ["Name", "E-mail", "Total Private Session", "Total Athlete"],
+      filterOrderOptions: [
+        { label: "Name", value: "name" },
+        { label: "E-mail", value: "email" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       show: false,
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

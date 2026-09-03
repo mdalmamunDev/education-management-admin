@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Courses" :headers="headers" :def-form-data="defFormData" :modal-w="'3xl'">
+  <data-table title="All Courses" :headers="headers" :def-form-data="defFormData" :modal-w="'3xl'" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st">
         <div class="font-medium">{{ item.courseName }}</div>
@@ -72,6 +72,14 @@ export default {
   data() {
     return {
       headers: ["Course", "Credits", "Teacher", "Department", "Semester"],
+      filterOrderOptions: [
+        { label: "Course", value: "courseName" },
+        { label: "Credits", value: "creditHours" },
+        { label: "Teacher", value: "teacherId" },
+        { label: "Department", value: "departmentId" },
+        { label: "Semester", value: "semesterId" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       teachers: [], departments: [], semesters: [],
       defFormData: {
         courseCode: "", courseName: "", description: "", creditHours: null,
@@ -80,6 +88,7 @@ export default {
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'teachers?limit=200', method: 'get', callback: (data) => { this.teachers = data || []; } });
     this.httpReq({ customUrl: 'departments?limit=200', method: 'get', callback: (data) => { this.departments = data || []; } });
     this.httpReq({ customUrl: 'semesters?limit=200', method: 'get', callback: (data) => { this.semesters = data || []; } });

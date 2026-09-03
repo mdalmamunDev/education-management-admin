@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Office Hours" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit">
+  <data-table title="All Office Hours" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.teacher?.firstName }} {{ item.teacher?.lastName }}</td>
       <td class="my-td text-gray-300">{{ humanize(item.dayOfWeek) }}</td>
@@ -51,12 +51,21 @@ export default {
   data() {
     return {
       headers: ["Teacher", "Day", "Start Time", "End Time", "Location"],
+      filterOrderOptions: [
+        { label: "Teacher", value: "teacherId" },
+        { label: "Day", value: "dayOfWeek" },
+        { label: "Start Time", value: "startTime" },
+        { label: "End Time", value: "endTime" },
+        { label: "Location", value: "location" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       teachers: [],
       days: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"],
       defFormData: { teacherId: "", dayOfWeek: "MONDAY", startTime: "", endTime: "", location: "" },
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'teachers?limit=200', method: 'get', callback: (data) => { this.teachers = data || []; } });
   },
   methods: {

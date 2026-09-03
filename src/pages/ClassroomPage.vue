@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Classrooms" :headers="headers" :def-form-data="defFormData" :action-info="false">
+  <data-table title="All Classrooms" :headers="headers" :def-form-data="defFormData" :action-info="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.building }}</td>
       <td class="my-td text-gray-300">{{ item.roomNumber }}</td>
@@ -41,8 +41,18 @@ export default {
   data() {
     return {
       headers: ["Building", "Room Number", "Capacity", "Equipment"],
+      filterOrderOptions: [
+        { label: "Building", value: "building" },
+        { label: "Room Number", value: "roomNumber" },
+        { label: "Capacity", value: "capacity" },
+        { label: "Equipment", value: "equipment" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       defFormData: { building: "", roomNumber: "", capacity: null, equipment: "" },
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

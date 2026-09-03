@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Students" :headers="headers" :def-form-data="defFormData" :action-info="false">
+  <data-table title="All Students" :headers="headers" :def-form-data="defFormData" :action-info="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st">
         <span class="font-medium">{{ item.firstName }} {{ item.lastName }}</span>
@@ -68,6 +68,14 @@ export default {
   data() {
     return {
       headers: ["Name", "Email", "Phone", "Department", "Status"],
+      filterOrderOptions: [
+        { label: "Name", value: "firstName" },
+        { label: "Email", value: "email" },
+        { label: "Phone", value: "phone" },
+        { label: "Department", value: "departmentId" },
+        { label: "Status", value: "status" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       departments: [],
       defFormData: {
         firstName: "", lastName: "", email: "", phone: "", dateOfBirth: "",
@@ -76,6 +84,7 @@ export default {
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({
       customUrl: 'departments?limit=200',
       method: 'get',

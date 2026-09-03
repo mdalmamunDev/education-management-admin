@@ -159,6 +159,10 @@ export default {
 				{ value: 'updatedAt', label: 'Date Updated' }
 			],
 		},
+		difSortOrder: {
+			type: String,
+			default: '',
+		},
 		searchPlaceholder: String,
 		title: {
 			type: String,
@@ -195,7 +199,7 @@ export default {
 	mounted() {
 		console.log('mounted with query', this.$route.query);
 		this.filters.sortBy = this.filterOrderOptions[0]?.value || '';
-		this.filters.sortOrder = 'desc';
+		this.filters.sortOrder = this.difSortOrder || 'desc';
 		this.$store.commit('setFilters', { ...this.filters, ...this.$route.query });
 		if (this.fetchDirect) this.fetchData();
 	},

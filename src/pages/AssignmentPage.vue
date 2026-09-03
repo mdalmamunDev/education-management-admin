@@ -1,5 +1,5 @@
 ﻿<template>
-  <data-table title="All Assignments" :headers="headers" :def-form-data="defFormData" :modal-w="'3xl'">
+  <data-table title="All Assignments" :headers="headers" :def-form-data="defFormData" :modal-w="'3xl'" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.title }}</td>
       <td class="my-td text-gray-300">{{ item.course?.courseName }}</td>
@@ -56,11 +56,20 @@ export default {
   data() {
     return {
       headers: ["Title", "Course", "Teacher", "Due Date", "Total Points"],
+      filterOrderOptions: [
+        { label: "Title", value: "title" },
+        { label: "Course", value: "courseId" },
+        { label: "Teacher", value: "teacherId" },
+        { label: "Due Date", value: "dueDate" },
+        { label: "Total Points", value: "totalPoints" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       courses: [], teachers: [],
       defFormData: { title: "", courseId: "", teacherId: "", description: "", dueDate: "", totalPoints: null },
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'courses?limit=200', method: 'get', callback: (data) => { this.courses = data || []; } });
     this.httpReq({ customUrl: 'teachers?limit=200', method: 'get', callback: (data) => { this.teachers = data || []; } });
   },

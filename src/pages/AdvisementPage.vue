@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Advisements" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit">
+  <data-table title="All Advisements" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.student?.firstName }} {{ item.student?.lastName }}</td>
       <td class="my-td text-gray-300">{{ item.teacher?.firstName }} {{ item.teacher?.lastName }}</td>
@@ -50,12 +50,20 @@ export default {
   data() {
     return {
       headers: ["Student", "Teacher", "Meeting Date", "Topic"],
+      filterOrderOptions: [
+        { label: "Student", value: "studentId" },
+        { label: "Teacher", value: "teacherId" },
+        { label: "Meeting Date", value: "meetingDate" },
+        { label: "Topic", value: "topic" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       students: [],
       teachers: [],
       defFormData: { studentId: "", teacherId: "", meetingDate: "", topic: "", notes: "" },
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'students?limit=200', method: 'get', callback: (data) => { this.students = data || []; } });
     this.httpReq({ customUrl: 'teachers?limit=200', method: 'get', callback: (data) => { this.teachers = data || []; } });
   },

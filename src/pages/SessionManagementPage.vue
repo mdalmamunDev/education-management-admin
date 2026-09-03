@@ -1,6 +1,6 @@
 <template>
   <data-table title=" Assign Assignment List" :headers="headers" :show-add-btn="false" :show-action="false"
-  :show-search="false">
+  :show-search="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st ps-8">{{ item.title }}</td>
       <td class="my-td">{{ getDate(item.date) }}</td>
@@ -26,7 +26,18 @@ export default {
   data() {
     return {
       headers: ["Title", "Date", "Time", "Athlete", "Coach", "Status"],
+      filterOrderOptions: [
+        { label: "Title", value: "title" },
+        { label: "Date", value: "date" },
+        { label: "Athlete", value: "athleteId" },
+        { label: "Coach", value: "coachId" },
+        { label: "Status", value: "status" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

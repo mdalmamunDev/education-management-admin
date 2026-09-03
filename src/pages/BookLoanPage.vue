@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Book Loans" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit">
+  <data-table title="All Book Loans" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.book?.title }}</td>
       <td class="my-td text-gray-300">{{ item.student?.firstName }} {{ item.student?.lastName }}</td>
@@ -65,6 +65,15 @@ export default {
   data() {
     return {
       headers: ["Book", "Student", "Checkout Date", "Due Date", "Return Date", "Status"],
+      filterOrderOptions: [
+        { label: "Book", value: "bookId" },
+        { label: "Student", value: "studentId" },
+        { label: "Checkout Date", value: "checkoutDate" },
+        { label: "Due Date", value: "dueDate" },
+        { label: "Return Date", value: "returnDate" },
+        { label: "Status", value: "status" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       books: [],
       students: [],
       statusColors: { borrowed: "blue", returned: "green", overdue: "yellow", lost: "red" },
@@ -72,6 +81,7 @@ export default {
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'library-books?limit=200', method: 'get', callback: (data) => { this.books = data || []; } });
     this.httpReq({ customUrl: 'students?limit=200', method: 'get', callback: (data) => { this.students = data || []; } });
   },

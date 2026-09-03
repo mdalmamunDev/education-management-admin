@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Payments" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit">
+  <data-table title="All Payments" :headers="headers" :def-form-data="defFormData" :transform-submit="transformSubmit" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.student?.firstName }} {{ item.student?.lastName }}</td>
       <td class="my-td text-gray-300">{{ item.amount }}</td>
@@ -68,12 +68,22 @@ export default {
   data() {
     return {
       headers: ["Student", "Amount", "Payment Date", "Method", "Semester", "Status"],
+      filterOrderOptions: [
+        { label: "Student", value: "studentId" },
+        { label: "Amount", value: "amount" },
+        { label: "Payment Date", value: "paymentDate" },
+        { label: "Method", value: "paymentMethod" },
+        { label: "Semester", value: "semester" },
+        { label: "Status", value: "status" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       students: [],
       statusColors: { pending: "yellow", paid: "green", failed: "red", refunded: "blue" },
       defFormData: { studentId: "", amount: null, paymentDate: "", paymentMethod: "CASH", semester: "", status: "PENDING" },
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'students?limit=200', method: 'get', callback: (data) => { this.students = data || []; } });
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Departments" :headers="headers" :def-form-data="defFormData" :action-info="false">
+  <data-table title="All Departments" :headers="headers" :def-form-data="defFormData" :action-info="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st">
         <span class="font-medium">{{ item.departmentName }}</span>
@@ -39,8 +39,17 @@ export default {
   data() {
     return {
       headers: ["Department Name", "Head of Department", "Location", "Phone"],
+      filterOrderOptions: [
+        { label: "Dept. Name", value: "departmentName" },
+        { label: "Head of Dept.", value: "headOfDepartment" },
+        { label: "Location", value: "location" },
+				{ value: 'createdAt', label: 'Date Created' },
+      ],
       defFormData: { departmentName: "", headOfDepartment: "", location: "", phone: "" },
     };
+  },
+  mounted() {
+		this.filters.sortOrder = 'asc';
   },
 };
 </script>

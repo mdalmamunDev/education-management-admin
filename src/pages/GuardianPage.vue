@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Guardians" :headers="headers" :def-form-data="defFormData" :action-info="false">
+  <data-table title="All Guardians" :headers="headers" :def-form-data="defFormData" :action-info="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st">
         <span class="font-medium">{{ item.firstName }} {{ item.lastName }}</span>
@@ -60,8 +60,19 @@ export default {
   data() {
     return {
       headers: ["Name", "Relationship", "Email", "Phone", "Occupation"],
+      filterOrderOptions: [
+        { label: "Name", value: "firstName" },
+        { label: "Relationship", value: "relationship" },
+        { label: "Email", value: "email" },
+        { label: "Phone", value: "phone" },
+        { label: "Occupation", value: "occupation" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       defFormData: { firstName: "", lastName: "", relationship: "", email: "", phone: "", occupation: "" },
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

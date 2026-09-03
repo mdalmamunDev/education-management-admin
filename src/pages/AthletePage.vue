@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Athlete’s List" :headers="headers">
+  <data-table title="All Athlete’s List" :headers="headers" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st">
         <div class="flex items-center space-x-3">
@@ -105,7 +105,17 @@ export default {
   data() {
     return {
       headers: ["Name", "E-mail", "Coach", "Parent", "Sports", "Score", "Status"],
+      filterOrderOptions: [
+        { label: "Name", value: "name" },
+        { label: "E-mail", value: "email" },
+        { label: "Score", value: "score" },
+        { label: "Status", value: "status" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
     };
+  },
+  mounted() {
+    this.filters.sortOrder = 'asc';
   },
 };
 </script>

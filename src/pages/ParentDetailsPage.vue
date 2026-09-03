@@ -43,7 +43,7 @@
     </div>
     <h2 class="text-2xl mb-3 ms-1">Children / Athletes</h2>
     <data-table title="All Coach’s List" :headers="headers" :show-title="false" :show-action="false"
-      :fetch-direct="false">
+      :fetch-direct="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
       <template #default="{ item }">
         <td class="my-td-1st ps-8">{{ item.user?.name || 'N/A' }}</td>
         <td class="my-td">{{ item.user?.email || 'N/A' }}</td>
@@ -66,11 +66,20 @@ export default {
   data() {
     return {
       headers: ["Name", "Email", "Phone", "Coach", "Score"],
+      filterOrderOptions: [
+        { label: "Name", value: "name" },
+        { label: "Email", value: "email" },
+        { label: "Phone", value: "phone" },
+        { label: "Coach", value: "coachId" },
+        { label: "Score", value: "score" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       id: null,
       details: {},
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.id = this.$route.params.id;
 
     this.fetchData({

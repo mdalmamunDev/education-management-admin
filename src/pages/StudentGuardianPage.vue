@@ -1,5 +1,5 @@
 <template>
-  <data-table title="Student-Guardian Links" :headers="headers" :def-form-data="defFormData" :action-info="false">
+  <data-table title="Student-Guardian Links" :headers="headers" :def-form-data="defFormData" :action-info="false" :filter-order-options="filterOrderOptions" :dif-sort-order="'asc'">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.student?.firstName }} {{ item.student?.lastName }}</td>
       <td class="my-td text-gray-300">{{ item.guardian?.firstName }} {{ item.guardian?.lastName }}</td>
@@ -35,12 +35,19 @@ export default {
   data() {
     return {
       headers: ["Student", "Guardian", "Relationship", "Linked On"],
+      filterOrderOptions: [
+        { label: "Student", value: "studentId" },
+        { label: "Guardian", value: "guardianId" },
+        { label: "Relationship", value: "relationship" },
+        { value: 'createdAt', label: 'Date Created' },
+      ],
       students: [],
       guardians: [],
       defFormData: { studentId: "", guardianId: "" },
     };
   },
   mounted() {
+    this.filters.sortOrder = 'asc';
     this.httpReq({ customUrl: 'students?limit=200', method: 'get', callback: (data) => { this.students = data || []; } });
     this.httpReq({ customUrl: 'guardians?limit=200', method: 'get', callback: (data) => { this.guardians = data || []; } });
   },
