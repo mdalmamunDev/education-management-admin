@@ -29,7 +29,7 @@
 			<thead class="bg-2">
 				<tr class="text-gray-300 text-sm font-medium">
 					<template v-for="(item, index) in headers" :key="index">
-						<th class="my-td" :class="index === 0 ? 'text-start ps-8' : ''">
+						<th :class="index === 0 ? 'my-td-1st' : 'my-td'">
 							{{ item }}
 						</th>
 					</template>

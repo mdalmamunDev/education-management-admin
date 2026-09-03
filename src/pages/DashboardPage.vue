@@ -55,20 +55,6 @@
           <Pie :data="pieData" :options="pieOptions" />
         </div>
       </div>
-
-      <!-- Recent Activity -->
-      <!-- <div>
-          <h3 class="text-xl font-semibold text-white mb-6">
-            Recent Activity
-          </h3>
-          <div class="space-y-8">
-            <div v-for="(item, index) in activities" :key="index"
-              class="flex items-center gap-3 border-b-[0.5px] border-[#808080] pb-2">
-              <img width="24" :src="item.icon" alt="">
-              <p class="text-gray-300 text-sm">{{ item.text }}</p>
-            </div>
-          </div>
-        </div> -->
     </div>
   </div>
 
@@ -81,7 +67,7 @@
         <thead class="bg-2">
           <tr class="text-gray-300 text-sm font-medium">
             <template v-for="(item, index) in headers" :key="index">
-              <th class="my-td" :class="index === 0 ? 'text-start ps-8' : ''">
+              <th :class="index === 0 ? 'my-td-1st' : 'my-td'">
                 {{ item }}
               </th>
             </template>
@@ -91,7 +77,7 @@
         <!-- Table Body -->
         <tbody class="divide-y divide-gray-600">
           <tr v-for="(item, index) in recentStudents" :key="index">
-            <td class="my-td-1st ps-8">{{ item.firstName }} {{ item.lastName }}</td>
+            <td class="my-td-1st">{{ item.firstName }} {{ item.lastName }}</td>
             <td class="my-td">{{ item.email }}</td>
             <td class="my-td"> {{ item.department?.departmentName || '—' }}</td>
             <td class="my-td"> <span v-html="printStatus((item.status || '').toLowerCase())"></span></td>
@@ -138,12 +124,38 @@ export default {
       totalGuardians: 0,
       recentStudents: [],
 
-      chartData: {
-        labels: ["Loading.."],
+      chartLabels: [],
+      chartDataArr: [],
+
+    }
+  },
+
+  mounted() {
+    // Reset stale list filters so dashboard requests are clean
+    this.$store.commit('setFilters', {});
+
+    this.fetchData({
+      customUrl: 'dashboard',
+      callback: ({ chartBar, totals, recentStudents }) => {
+        this.chartLabels = chartBar?.labels || [];
+        this.chartDataArr = chartBar?.data || [];
+        this.totalStudents = totals?.students || 0;
+        this.totalTeachers = totals?.teachers || 0;
+        this.totalCourses = totals?.courses || 0;
+        this.totalGuardians = totals?.guardians || 0;
+        this.recentStudents = recentStudents || [];
+      }
+    });
+  },
+
+  computed: {
+    chartData() {
+      return {
+        labels: this.chartLabels,
         datasets: [
           {
             label: "Enrollments",
-            data: [0],
+            data: this.chartDataArr,
             backgroundColor: (ctx) => {
               const chart = ctx.chart
               const { ctx: canvasCtx, chartArea } = chart
@@ -155,77 +167,17 @@ export default {
                 0,
                 chartArea.bottom
               )
-              // gradient.addColorStop(0, "#54A7FF")
-              // gradient.addColorStop(1, "#326499")
+              gradient.addColorStop(0, "#faab00")
+              gradient.addColorStop(1, "#9c6600")
               return gradient
             },
             borderRadius: 6,
             barPercentage: 0.5,
           },
         ],
-      },
+      };
+    },
 
-    }
-  },
-
-  mounted() {
-    // Reset stale list filters so dashboard requests are clean
-    this.$store.commit('setFilters', {});
-
-    // Students: total count + most recent rows
-    this.fetchData({
-      customUrl: 'students?limit=5',
-      callback: (data, response) => {
-        this.recentStudents = data || [];
-        this.totalStudents = response?.data?.pagination?.totalCount || 0;
-      }
-    });
-    this.fetchData({ customUrl: 'teachers?limit=1', callback: (_, response) => { this.totalTeachers = response?.data?.pagination?.totalCount || 0; } });
-    this.fetchData({ customUrl: 'courses?limit=1', callback: (_, response) => { this.totalCourses = response?.data?.pagination?.totalCount || 0; } });
-    this.fetchData({ customUrl: 'guardians?limit=1', callback: (_, response) => { this.totalGuardians = response?.data?.pagination?.totalCount || 0; } });
-
-    // Enrollments grouped per course (top courses) for the bar chart
-    this.fetchData({
-      customUrl: 'enrollments?limit=200',
-      callback: (data) => {
-        const groups = {};
-        (data || []).forEach((e) => {
-          const key = e.course?.courseName || 'Unknown';
-          groups[key] = (groups[key] || 0) + 1;
-        });
-        // Sort descending and keep top 8 courses
-        const sorted = Object.entries(groups).sort((a, b) => b[1] - a[1]).slice(0, 8);
-        this.chartData = {
-          labels: sorted.map(([name]) => name),
-          datasets: [
-            {
-              label: "Enrollments",
-              data: sorted.map(([, count]) => count),
-              backgroundColor: (ctx) => {
-                const chart = ctx.chart
-                const { ctx: canvasCtx, chartArea } = chart
-                if (!chartArea) return null
-
-                const gradient = canvasCtx.createLinearGradient(
-                  0,
-                  chartArea.top,
-                  0,
-                  chartArea.bottom
-                )
-                gradient.addColorStop(0, "#54A7FF")
-                gradient.addColorStop(1, "#326499")
-                return gradient
-              },
-              borderRadius: 6,
-              barPercentage: 0.5,
-            },
-          ],
-        };
-      }
-    });
-  },
-
-  computed: {
     pieData() {
       return {
         labels: ["Students", "Teachers", "Guardians"],
@@ -237,9 +189,9 @@ export default {
               this.totalGuardians
             ],
             backgroundColor: [
-              "#0175F2",
-              "#60a5fa",
-              "#326499"
+              "#faab00",
+              "#3b82f6",
+              "#00fd36"
             ]
           }
         ]

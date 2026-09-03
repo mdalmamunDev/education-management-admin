@@ -7,8 +7,8 @@
 
     <div class="flex w-full h-fit my-auto gap-4 max-w-7xl mx-auto px-8">
       <!-- Left side - Logo -->
-      <div class="flex-1 flex items-center justify-center my-20">
-        <img class="w-full max-w-[350px] auth-illustration" :src="`/icons${$route.path}.svg`" alt="">
+      <div class="flex-1 flex items-center justify-center my-10">
+        <img class="w-full max-w-[400px] auth-illustration" :src="`/images/logo.png`" alt="">
       </div>
 
       <div class="w-[1px] theme-divider"></div>
