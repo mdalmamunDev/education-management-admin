@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Enrollments" :headers="headers" :def-form-data="defFormData">
+  <data-table title="All Enrollments" :headers="headers" :def-form-data="defFormData" :action-info="false">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.student?.firstName }} {{ item.student?.lastName }}</td>
       <td class="my-td text-gray-300">{{ item.course?.courseCode }} - {{ item.course?.courseName }}</td>

@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Departments" :headers="headers" :def-form-data="defFormData">
+  <data-table title="All Departments" :headers="headers" :def-form-data="defFormData" :action-info="false">
     <template #default="{ item }">
       <td class="my-td-1st">
         <span class="font-medium">{{ item.departmentName }}</span>

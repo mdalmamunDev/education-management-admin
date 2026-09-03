@@ -1,19 +1,37 @@
 <template>
 	<div v-if="showTitle" class="flex">
-		<div class="flex-1 flex justify-between items-center px-8 py-4 bg-1">
+		<div class="flex-1 flex justify-between items-center px-8 py-3 bg-1">
 			<h1 class="text-2xl font-semibold">{{ title }}</h1>
 
 			<!-- Search Bar -->
-			<form @submit.prevent="fetchData()" class="flex gap-2">
+			<form v-if="showFilter" @submit.prevent="fetchData()" class="flex gap-2">
 				<slot name="filters"></slot>
 
-				<div v-if="showSearch" class="relative">
+				<div v-if="filterSearch" class="relative">
 					<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 						<i class="fa-solid fa-magnifying-glass text-2xl text-blue-600"></i>
 					</div>
 					<input v-model="filters.search" type="text"
 						:placeholder="searchPlaceholder || `Search ${record?.toLowerCase()} here`"
 						class="bg-surface text-main border-theme border pl-12 pr-4 py-2 rounded-xl w-80 focus:outline-none focus:ring-2 focus:ring-blue-500">
+				</div>
+				<!-- Sort / Order -->
+				<div v-if="filterOrder" class="flex items-center bg-surface border border-theme rounded-xl text-sm text-sub overflow-hidden">
+					<!-- Sort Field -->
+					<select v-model="filters.sortBy" @change="fetchData()"
+						class="bg-surface px-4 py-2 focus:outline-none">
+						<option v-for="option in filterOrderOptions" :key="option.value" :value="option.value">
+							{{ option.label }}
+						</option>
+					</select>
+
+					<!-- ASC / DESC Toggle -->
+					<button type="button" @click="toggleSortOrder" class="px-4 py-2 border-l border-theme hover:bg-2 transition"
+						:title="filters.sortOrder === 'asc' ? 'Ascending' : 'Descending'">
+						<i :class="filters.sortOrder === 'asc'
+							? 'fa-solid fa-arrow-up-wide-short'
+							: 'fa-solid fa-arrow-down-wide-short'" class="text-blue-600"></i>
+					</button>
 				</div>
 			</form>
 		</div>
@@ -55,7 +73,7 @@
 							<button v-if="actionInfo"
 								@click="typeof onActionInfo === 'function' ? onActionInfo(item) : $router.push(`${$route.path}/${item.id}`)"
 								class="table-action">
-								<img class="w-5" src="/icons/info.svg" alt="">
+								<i class="fa-solid fa-circle-info text-sub"></i>
 							</button>
 						</div>
 					</td>
@@ -122,9 +140,24 @@ export default {
 			default: true,
 		},
 		onActionInfo: Function,
-		showSearch: {
+		showFilter: {
 			type: Boolean,
 			default: true,
+		},
+		filterSearch: {
+			type: Boolean,
+			default: true,
+		},
+		filterOrder: {
+			type: Boolean,
+			default: true,
+		},
+		filterOrderOptions: {
+			type: Array,
+			default: () => [
+				{ value: 'createdAt', label: 'Date Created' },
+				{ value: 'updatedAt', label: 'Date Updated' }
+			],
 		},
 		searchPlaceholder: String,
 		title: {
@@ -161,6 +194,8 @@ export default {
 	},
 	mounted() {
 		console.log('mounted with query', this.$route.query);
+		this.filters.sortBy = this.filterOrderOptions[0]?.value || '';
+		this.filters.sortOrder = 'desc';
 		this.$store.commit('setFilters', { ...this.filters, ...this.$route.query });
 		if (this.fetchDirect) this.fetchData();
 	},
@@ -189,6 +224,7 @@ export default {
 						this.httpReq({
 							method: 'delete',
 							urlSuffix: id,
+							data: {},
 							callback: () => { this.fetchData() }
 						});
 					}
@@ -203,6 +239,12 @@ export default {
 		onShowSizeChange(current, size) {
 			this.filters.page = current;
 			this.filters.limit = size;
+			this.fetchData();
+		},
+		toggleSortOrder() {
+			this.filters.sortOrder =
+				this.filters.sortOrder === 'asc' ? 'desc' : 'asc';
+
 			this.fetchData();
 		},
 	}

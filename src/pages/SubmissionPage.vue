@@ -1,5 +1,5 @@
 <template>
-  <data-table title="All Submissions" :headers="headers" :def-form-data="defFormData">
+  <data-table title="All Submissions" :headers="headers" :def-form-data="defFormData" :action-info="false">
     <template #default="{ item }">
       <td class="my-td-1st font-medium">{{ item.assignment?.title }}</td>
       <td class="my-td text-gray-300">{{ item.student?.firstName }} {{ item.student?.lastName }}</td>
